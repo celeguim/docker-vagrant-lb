@@ -1,0 +1,6 @@
+- hosts: webservers_usa
+  connection: local
+  gather_facts: no
+  tasks:
+    - debug: msg='hello'
+

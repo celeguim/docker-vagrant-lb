@@ -1,0 +1,19 @@
+all:
+  children:
+
+    swarm_leader:
+      hosts:
+        swarm-manager-01:
+          ansible_host: swarm-manager-01
+
+    swarm_manager:
+      hosts:
+        swarm-manager-01:
+          ansible_host: swarm-manager-01
+
+    swarm_worker:
+      hosts:
+        swarm-worker-01:
+          ansible_host: swarm-worker-01
+        swarm-worker-02:
+          ansible_host: swarm-worker-02

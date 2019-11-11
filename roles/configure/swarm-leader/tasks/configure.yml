@@ -1,0 +1,25 @@
+---
+
+- name: Docker is installed 
+  yum: 
+    name: docker 
+    state: present
+
+- name: Docker is started 
+  service: 
+    name: docker
+    state: started 
+    enabled: yes
+
+- name: Check if Swarm Mode is already activated
+  command: docker info
+  register: docker_info
+  changed_when: false
+
+- name: Create Swarm Manager Leader if it is not activated
+  command: docker swarm init --advertise-addr {{ hostvars[groups['swarm_leader'][0]]['ansible_eth1']['ipv4']['address'] }}
+  when: "'Swarm: active' not in docker_info.stdout"
+
+- name: Disable Leader scheduling
+  command: docker node update --availability drain {{ groups['swarm_leader'][0] }}
+  when: "'Swarm: active' not in docker_info.stdout and disable_leader_scheduling"

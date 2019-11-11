@@ -1,0 +1,25 @@
+---
+- name: Bootstrap CentOS hosts
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: bootstrap/ansible-bootstrap
+      tags: [ ansible-bootstrap ]
+
+- name: Create Swarm Leader node
+  hosts: swarm_leader
+  roles:
+    - role: configure/swarm-leader
+      tags: [ swarm-leader ]
+
+- name: Create Swarm Manager nodes
+  hosts: swarm_manager:!swarm_leader
+  roles:
+    - role: configure/swarm-manager
+      tags: [ swarm-manager ]
+
+- name: Create Swarm Worker nodes
+  hosts: swarm_worker
+  roles:
+    - role: configure/swarm-worker
+      tags: [ swarm-worker ]

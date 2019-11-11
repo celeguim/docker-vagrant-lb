@@ -1,0 +1,9 @@
+---
+- name: Create Worker nodes
+  include: configure.yml
+  become: true
+
+- name: Test Worker nodes
+  include: test.yml
+  tags: [ test ]
+  become: true

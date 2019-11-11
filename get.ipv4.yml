@@ -1,0 +1,26 @@
+---
+- hosts: [all]
+  gather_facts: true
+  tasks:
+
+  - name: IPV4 information 
+    vars: 
+      msg: |
+        {{ hostvars[inventory_hostname]['ansible_host'] }} ( {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} )
+    debug: 
+      msg: "{{ msg }}"
+
+  - name: IPV4 information 
+    vars: 
+      msg: |
+        {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }} 
+    debug: 
+      msg: "{{ msg }}"
+
+  - name: IPV4 information 
+    vars: 
+      msg: |
+        {{ hostvars[groups['swarm_leader'][0]]['ansible_eth1']['ipv4']['address'] }} 
+    debug: 
+      msg: "{{ msg }}"
+      

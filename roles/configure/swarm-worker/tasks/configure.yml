@@ -1,0 +1,27 @@
+---
+
+- name: Docker is installed 
+  yum: 
+    name: docker 
+    state: present
+
+- name: Docker is started 
+  service: 
+    name: docker
+    state: started 
+    enabled: yes
+
+- name: Check if Swarm Mode is already activated
+  command: docker info
+  register: docker_info
+  changed_when: false
+
+- name: Recover Swarm Leader token
+  shell: docker swarm join-token worker | grep token | cut -d ' ' -f 6
+  register: worker_token
+  when: "'Swarm: active' not in docker_info.stdout"
+  delegate_to: "{{ groups['swarm_leader'][0] }}"
+
+- name: Join Swarm Cluster as Worker
+  command: docker swarm join --token {{ worker_token.stdout }} {{ hostvars[groups['swarm_leader'][0]]['ansible_eth1']['ipv4']['address'] }}
+  when: "'Swarm: active' not in docker_info.stdout"

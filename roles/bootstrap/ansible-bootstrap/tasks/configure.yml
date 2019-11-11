@@ -1,0 +1,6 @@
+# filename: roles/bootstrap/ansible-bootstrap/tasks/configure.yml
+- block:
+    - name: Check if Python is installed
+      raw: "{{ ansible_python_interpreter }} --version"
+      register: python_install
+      changed_when: false
